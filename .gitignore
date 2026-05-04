@@ -3,3 +3,5 @@ my_emails/
 token.json
 credentials.json
 summaries/
+readEmail
+summarizeEmail
