@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI for Small Business — Interactive Guide</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          // Color-blind-safe palette: blue/orange/teal accents.
+          // Avoids red/green confusion. All combos meet WCAG AA on their backgrounds.
+          brand: {
+            50:  '#eff6ff',
+            100: '#dbeafe',
+            200: '#bfdbfe',
+            300: '#93c5fd',
+            400: '#60a5fa',
+            500: '#3b82f6',
+            600: '#2563eb',
+            700: '#1d4ed8',
+            800: '#1e40af',
+            900: '#1e3a8a',
+            950: '#172554',
+          },
+          accent: {
+            // Orange (safe paired with blue for color-blind users)
+            500: '#f59e0b',
+            600: '#d97706',
+            700: '#b45309',
+          },
+          teal: {
+            500: '#14b8a6',
+            600: '#0d9488',
+            700: '#0f766e',
+          },
+          ink: {
+            50:  '#f8fafc',
+            100: '#f1f5f9',
+            200: '#e2e8f0',
+            300: '#cbd5e1',
+            400: '#94a3b8',
+            500: '#64748b',
+            600: '#475569',
+            700: '#334155',
+            800: '#1e293b',
+            900: '#0f172a',
+            950: '#020617',
+          }
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  /* Focus rings for accessibility */
+  *:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .dark *:focus-visible {
+    outline-color: #60a5fa;
+  }
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.35s ease-out; }
+  @keyframes slideIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+  .slide-in { animation: slideIn 0.25s ease-out; }
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; }
+  .dark ::-webkit-scrollbar-thumb { background: #334155; }
+  /* SVG workflow animation */
+  @keyframes flow {
+    0% { stroke-dashoffset: 20; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .flow-arrow {
+    stroke-dasharray: 6 4;
+    animation: flow 1.5s linear infinite;
+  }
+  .reduced-motion .flow-arrow { animation: none; stroke-dasharray: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-arrow { animation: none; }
+    .fade-in, .slide-in { animation: none; }
+  }
+</style>
+</head>
+<body class="bg-ink-50 dark:bg-ink-950 text-ink-900 dark:text-ink-100 min-h-screen transition-colors duration-200">
+
+<!-- ============================== HEADER ============================== -->
+<header class="sticky top-0 z-40 backdrop-blur bg-white/85 dark:bg-ink-900/85 border-b border-ink-200 dark:border-ink-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3">
+    <button onclick="goHome()" class="flex items-center gap-2 sm:gap-3 group" aria-label="Go to home">
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-brand-600 to-teal-600 flex items-center justify-center text-white font-bold shadow-md group-hover:scale-105 transition-transform">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div class="text-left hidden sm:block">
+        <div class="font-bold text-sm sm:text-base leading-tight">AI Business Guide</div>
+        <div class="text-xs text-ink-500 dark:text-ink-400 leading-tight">Interactive tool finder</div>
+      </div>
+    </button>
+
+    <!-- Breadcrumb (hides on small screens) -->
+    <nav id="breadcrumb" class="hidden md:flex items-center gap-2 text-sm text-ink-600 dark:text-ink-300" aria-label="Breadcrumb"></nav>
+
+    <div class="flex items-center gap-2">
+      <button id="themeToggle" onclick="toggleTheme()"
+        class="p-2 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800 transition-colors"
+        aria-label="Toggle dark mode">
+        <svg id="iconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+        </svg>
+        <svg id="iconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10"></main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="border-t border-ink-200 dark:border-ink-800 mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-ink-500 dark:text-ink-400">
+    <p>This guide is informational. Tool availability, pricing, and features change — always verify on the vendor's site before committing.</p>
+    <p class="mt-2">Built as a learning resource for small businesses exploring AI.</p>
+  </div>
+</footer>
+
+<!-- ============================== MODAL ============================== -->
+<div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="absolute inset-0 bg-ink-950/60 backdrop-blur-sm" onclick="closeModal()"></div>
+  <div class="relative bg-white dark:bg-ink-900 rounded-xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto slide-in border border-ink-200 dark:border-ink-700">
+    <div class="sticky top-0 bg-white dark:bg-ink-900 border-b border-ink-200 dark:border-ink-700 px-5 py-4 flex items-start justify-between gap-3">
+      <h3 id="modalTitle" class="text-lg font-bold pr-4"></h3>
+      <button onclick="closeModal()" class="p-1 rounded hover:bg-ink-100 dark:hover:bg-ink-800 -mr-1 -mt-1" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="modalBody" class="px-5 py-4 text-sm sm:text-base leading-relaxed"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   THEME
+   ============================================================ */
+let currentTheme = 'light';
+function toggleTheme() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+  document.documentElement.classList.toggle('light', currentTheme === 'light');
+}
+// Respect system preference on first load
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  toggleTheme();
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function openModal(title, htmlBody) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = htmlBody;
+  const m = document.getElementById('modal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  const m = document.getElementById('modal');
+  m.classList.add('hidden');
+  m.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ============================================================
+   DATA — Business categories & AI use cases
+   ============================================================ */
+const BUSINESSES = {
+  retail: {
+    name: 'Retail & E-commerce',
+    tagline: 'Online stores, brick-and-mortar shops, product sellers',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>`,
+    color: 'from-brand-600 to-teal-600',
+    useCases: ['inventory', 'productRecs', 'customerChat', 'salesForecast', 'emailMarketing']
+  },
+  restaurant: {
+    name: 'Restaurants & Cafes',
+    tagline: 'Dine-in, takeout, food trucks, catering',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>`,
+    color: 'from-accent-600 to-brand-600',
+    useCases: ['menuOptimize', 'reservations', 'orderTaking', 'demandPredict', 'staffSchedule']
+  },
+  professional: {
+    name: 'Professional Services',
+    tagline: 'Consulting, legal, accounting, advisory',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>`,
+    color: 'from-brand-700 to-brand-500',
+    useCases: ['docDrafting', 'clientIntake', 'research', 'invoicing', 'meetingNotes']
+  },
+  trades: {
+    name: 'Cleaning, Handyman & Trades',
+    tagline: 'Cleaners, plumbers, electricians, lawn care',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>`,
+    color: 'from-accent-600 to-accent-500',
+    useCases: ['jobScheduling', 'quoting', 'routeOptimize', 'leadFollowup', 'reviewMgmt']
+  },
+  fitness: {
+    name: 'Salons, Gyms & Fitness',
+    tagline: 'Hair, nails, personal training, yoga, studios',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-7-3a3 3 0 11-6 0 3 3 0 016 0zm6.535 6.072c-.84-.6-1.91-1.072-3.085-1.072H9.85c-2.43 0-4.586 1.45-5.535 3.572"/></svg>`,
+    color: 'from-teal-600 to-brand-600',
+    useCases: ['booking', 'socialContent', 'personalOffers', 'noShowPredict', 'clientRetention']
+  },
+  auto: {
+    name: 'Auto Repair & Service',
+    tagline: 'Mechanics, body shops, tire shops, detailing',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>`,
+    color: 'from-ink-700 to-brand-700',
+    useCases: ['leadFollowup', 'serviceReminders', 'quoting', 'partsLookup', 'reviewMgmt']
+  },
+  realestate: {
+    name: 'Real Estate',
+    tagline: 'Agents, brokers, property managers',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>`,
+    color: 'from-brand-800 to-teal-600',
+    useCases: ['listings', 'leadFollowup', 'adTargeting', 'contractReview', 'virtualStaging']
+  },
+  healthcare: {
+    name: 'Healthcare & Dental Practices',
+    tagline: 'Small clinics, dental offices, therapists',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>`,
+    color: 'from-teal-700 to-teal-500',
+    useCases: ['booking', 'meetingNotes', 'clientIntake', 'serviceReminders', 'docDrafting']
+  },
+  education: {
+    name: 'Education & Tutoring',
+    tagline: 'Tutors, coaches, online courses, music teachers',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0019.48 0m-19.48 0a60.34 60.34 0 01-1.262-.366A2.25 2.25 0 011 7.875v-.5c0-.97.616-1.813 1.518-2.122a60.341 60.341 0 0118.964 0c.902.31 1.518 1.151 1.518 2.122v.5c0 1.045-.745 1.94-1.762 2.156-.42.094-.842.219-1.262.366m-19.48 0a60.508 60.508 0 008.997 5.06m-8.997-5.06l8.997 5.06m9.985-5.06a60.434 60.434 0 01-9.985 5.06"/></svg>`,
+    color: 'from-brand-600 to-accent-600',
+    useCases: ['lessonPlanning', 'studentFeedback', 'socialContent', 'booking', 'personalOffers']
+  },
+  marketing: {
+    name: 'Marketing & Creative Agencies',
+    tagline: 'Designers, copywriters, social media managers',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.091 3.091zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>`,
+    color: 'from-accent-500 to-brand-700',
+    useCases: ['socialContent', 'adTargeting', 'emailMarketing', 'productRecs', 'meetingNotes']
+  },
+  construction: {
+    name: 'Construction & Contractors',
+    tagline: 'GCs, remodelers, roofers, landscapers',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/></svg>`,
+    color: 'from-ink-600 to-accent-600',
+    useCases: ['quoting', 'jobScheduling', 'routeOptimize', 'leadFollowup', 'docDrafting']
+  },
+  solo: {
+    name: 'Freelancers & Solo Operators',
+    tagline: 'One-person businesses, side hustles, consultants',
+    iconSvg: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>`,
+    color: 'from-teal-600 to-accent-500',
+    useCases: ['emailMarketing', 'meetingNotes', 'invoicing', 'socialContent', 'clientIntake']
+  }
+};
+
+/* ----------- USE CASE LIBRARY (shared across categories) -------------- */
+const USE_CASES = {
+  inventory: {
+    title: 'Smart Inventory Tracking',
+    plain: 'AI watches what you sell, predicts when you\'ll run out, and tells you what to reorder — without you counting boxes manually.',
+    helps: 'Stops you from running out of bestsellers and from buying stuff that just sits on the shelf collecting dust. Most small shops save 10–25% on inventory costs.',
+    commercial: [
+      { name: 'Shopify Magic', url: 'https://www.shopify.com/magic', desc: 'Built into Shopify — flags low stock and predicts demand.' },
+      { name: 'Square for Retail', url: 'https://squareup.com/us/en/point-of-sale/retail', desc: 'POS with built-in inventory forecasting.' },
+      { name: 'Lightspeed Retail', url: 'https://www.lightspeedhq.com/pos/retail/', desc: 'Inventory + AI-powered reordering suggestions.' }
+    ],
+    custom: [
+      { name: 'Zapier + Google Sheets + ChatGPT', desc: 'When a sale hits your POS, Zapier logs it to a sheet, and weekly a GPT prompt analyzes the data and emails you a reorder list.' },
+      { name: 'Make.com + Airtable + Claude', desc: 'Build a no-code dashboard that pulls sales data, runs it through Claude for forecasting, and posts to Slack.' },
+      { name: 'n8n self-hosted', desc: 'Open-source alternative to Zapier — same automation power, you control the data.' }
+    ],
+    workflow: [
+      { label: 'Sale happens', detail: 'Customer buys at register or website', icon: 'cart' },
+      { label: 'Inventory updates', detail: 'POS auto-decrements stock count', icon: 'database' },
+      { label: 'AI analyzes', detail: 'Looks at sales velocity and seasonality', icon: 'brain' },
+      { label: 'Forecast generated', detail: 'Predicts when you\'ll hit minimum stock', icon: 'chart' },
+      { label: 'Alert sent', detail: 'You get an email or text to reorder', icon: 'bell' },
+      { label: 'You approve', detail: 'One tap to place the order', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Shopify\'s guide to AI inventory', url: 'https://www.shopify.com/blog/ai-inventory-management' },
+      { name: 'Zapier inventory automation templates', url: 'https://zapier.com/apps/categories/ecommerce' }
+    ]
+  },
+  productRecs: {
+    title: 'Product Recommendations',
+    plain: 'AI looks at what each customer browses or buys, then shows them other items they\'re likely to love — like Amazon\'s "frequently bought together."',
+    helps: 'Average order value typically jumps 10–30%. Customers feel like the store "gets them," which builds loyalty.',
+    commercial: [
+      { name: 'Klaviyo', url: 'https://www.klaviyo.com/', desc: 'Email + on-site personalization with AI product picks.' },
+      { name: 'Rebuy', url: 'https://www.rebuyengine.com/', desc: 'Shopify app for personalized recs and upsells.' },
+      { name: 'Nosto', url: 'https://www.nosto.com/', desc: 'Enterprise-grade personalization across email and site.' }
+    ],
+    custom: [
+      { name: 'Zapier + Klaviyo + OpenAI', desc: 'Tag customers based on behavior, then have GPT write a personalized "you might also like" email.' },
+      { name: 'Custom Python + collaborative filtering', desc: 'For shops with 10K+ orders — build your own recommender using basic ML libraries.' }
+    ],
+    workflow: [
+      { label: 'Customer browses', detail: 'Visits product pages on your site', icon: 'eye' },
+      { label: 'Behavior captured', detail: 'AI notes what they viewed and for how long', icon: 'database' },
+      { label: 'Match found', detail: 'Compared to similar customers\' patterns', icon: 'brain' },
+      { label: 'Recommendations shown', detail: 'On product page, cart, or via email', icon: 'mail' },
+      { label: 'Conversion tracked', detail: 'AI learns what worked for next time', icon: 'chart' }
+    ],
+    refs: [
+      { name: 'Klaviyo personalization guide', url: 'https://www.klaviyo.com/blog/personalization' },
+      { name: 'Shopify recommendation apps', url: 'https://apps.shopify.com/categories/sell-products-personalization' }
+    ]
+  },
+  customerChat: {
+    title: 'Customer Service Chatbot',
+    plain: 'A virtual assistant on your website or social media that answers common questions 24/7 — order status, returns, store hours, sizing — without you typing a thing.',
+    helps: 'Cuts response time from hours to seconds. Handles 60–80% of common questions automatically so you can focus on hard ones.',
+    commercial: [
+      { name: 'Intercom Fin', url: 'https://www.intercom.com/fin', desc: 'AI agent that learns from your help docs.' },
+      { name: 'Tidio', url: 'https://www.tidio.com/', desc: 'Affordable chatbot for small e-commerce sites.' },
+      { name: 'Gorgias', url: 'https://www.gorgias.com/', desc: 'Built for Shopify — handles order questions natively.' }
+    ],
+    custom: [
+      { name: 'Custom GPT (OpenAI)', desc: 'Upload your FAQs and policy docs, and OpenAI gives you a shareable chatbot for free.' },
+      { name: 'Zapier Chatbots', desc: 'Drag-and-drop AI chatbot builder, no code needed.' },
+      { name: 'Voiceflow', desc: 'Visual chatbot builder with AI integration for more complex flows.' }
+    ],
+    workflow: [
+      { label: 'Customer asks', detail: 'Types a question on chat widget', icon: 'message' },
+      { label: 'AI reads intent', detail: 'Figures out what they actually need', icon: 'brain' },
+      { label: 'Knowledge searched', detail: 'Pulls answer from your FAQ/docs', icon: 'database' },
+      { label: 'Reply sent', detail: 'Friendly answer in under 2 seconds', icon: 'message' },
+      { label: 'Escalation if needed', detail: 'Hands off to human for tricky stuff', icon: 'user' }
+    ],
+    refs: [
+      { name: 'OpenAI Custom GPTs', url: 'https://help.openai.com/en/articles/8554407-gpts-faq' },
+      { name: 'Tidio AI chatbot guide', url: 'https://www.tidio.com/blog/ai-chatbot/' }
+    ]
+  },
+  salesForecast: {
+    title: 'Sales Forecasting',
+    plain: 'AI looks at your past sales — by day, week, season — and tells you what next month, quarter, or holiday is likely to look like.',
+    helps: 'Better cash flow planning. You stock up before busy periods and pull back before slow ones.',
+    commercial: [
+      { name: 'QuickBooks Cash Flow', url: 'https://quickbooks.intuit.com/', desc: 'Forecasting built into your accounting software.' },
+      { name: 'Pecan AI', url: 'https://www.pecan.ai/', desc: 'No-code predictive analytics for SMBs.' },
+      { name: 'Microsoft Power BI Copilot', url: 'https://powerbi.microsoft.com/', desc: 'AI-assisted dashboards and forecasts.' }
+    ],
+    custom: [
+      { name: 'Google Sheets + Gemini', desc: 'Paste your sales data, ask Gemini "forecast next quarter" — it draws charts and explains trends.' },
+      { name: 'Airtable + automations', desc: 'Track sales in Airtable and trigger forecasts via OpenAI when data updates.' }
+    ],
+    workflow: [
+      { label: 'Sales data collected', detail: 'From POS, e-commerce, accounting', icon: 'database' },
+      { label: 'AI finds patterns', detail: 'Seasonality, trends, day-of-week effects', icon: 'brain' },
+      { label: 'Forecast built', detail: 'Next 30/60/90 days projected', icon: 'chart' },
+      { label: 'Dashboard updates', detail: 'You see expected revenue at a glance', icon: 'eye' },
+      { label: 'Plan accordingly', detail: 'Order stock, schedule staff, set budgets', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Pecan AI for SMBs', url: 'https://www.pecan.ai/use-cases/' }
+    ]
+  },
+  emailMarketing: {
+    title: 'AI Email Marketing',
+    plain: 'AI writes subject lines, body copy, and even picks the best send time — all personalized to each customer\'s past behavior.',
+    helps: 'Open rates often climb 20–40%. You spend 30 minutes a week on email instead of half a day.',
+    commercial: [
+      { name: 'Mailchimp AI', url: 'https://mailchimp.com/features/ai-marketing/', desc: 'Subject line generator, send-time optimization, content suggestions.' },
+      { name: 'Klaviyo', url: 'https://www.klaviyo.com/', desc: 'AI-powered segmentation and predictive analytics.' },
+      { name: 'Beehiiv', url: 'https://www.beehiiv.com/', desc: 'Newsletter platform with AI writing tools.' }
+    ],
+    custom: [
+      { name: 'Zapier + Mailchimp + ChatGPT', desc: 'Trigger: new customer. Action: GPT writes a custom welcome email based on what they bought, Mailchimp sends it.' },
+      { name: 'Make.com + Notion + Claude', desc: 'Plan campaigns in Notion, have Claude draft variations, push winners to your email tool.' }
+    ],
+    workflow: [
+      { label: 'Customer segmented', detail: 'Grouped by behavior or purchase history', icon: 'user' },
+      { label: 'AI drafts copy', detail: 'Subject + body tailored to that group', icon: 'brain' },
+      { label: 'You approve', detail: 'Quick review, edit if needed', icon: 'check' },
+      { label: 'Optimal time picked', detail: 'AI sends when each person opens email', icon: 'bell' },
+      { label: 'Results tracked', detail: 'Opens, clicks, sales feed back into model', icon: 'chart' }
+    ],
+    refs: [
+      { name: 'Mailchimp AI overview', url: 'https://mailchimp.com/features/ai-marketing/' }
+    ]
+  },
+  menuOptimize: {
+    title: 'Menu Optimization',
+    plain: 'AI analyzes which dishes sell, when, and how profitable each is — then suggests price changes, what to feature, and what to drop.',
+    helps: 'Most restaurants see a 5–15% bump in profit just from smart menu pricing and placement.',
+    commercial: [
+      { name: 'Toast POS', url: 'https://pos.toasttab.com/', desc: 'Restaurant POS with menu engineering reports.' },
+      { name: 'MarginEdge', url: 'https://www.marginedge.com/', desc: 'Tracks ingredient costs vs. menu prices in real time.' },
+      { name: 'Square for Restaurants', url: 'https://squareup.com/us/en/point-of-sale/restaurants', desc: 'Built-in sales analytics and item-level insights.' }
+    ],
+    custom: [
+      { name: 'Sales export + ChatGPT', desc: 'Export weekly POS data as CSV, paste into ChatGPT, ask "which items should I promote, reprice, or cut?"' },
+      { name: 'Google Sheets + Gemini', desc: 'Track sales and costs in a sheet — Gemini calculates margins and flags low performers automatically.' }
+    ],
+    workflow: [
+      { label: 'Sales tracked', detail: 'Every order logged by item, time, day', icon: 'database' },
+      { label: 'Costs entered', detail: 'Ingredient costs per dish', icon: 'chart' },
+      { label: 'AI ranks items', detail: 'Stars, plowhorses, puzzles, dogs', icon: 'brain' },
+      { label: 'Recommendations', detail: 'Reprice, redesign, or remove items', icon: 'message' },
+      { label: 'Menu updated', detail: 'Try changes, measure impact', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Menu engineering 101', url: 'https://pos.toasttab.com/blog/on-the-line/menu-engineering' }
+    ]
+  },
+  reservations: {
+    title: 'Reservations & Booking',
+    plain: 'Customers book online any time, get reminders, and cancellations auto-fill from your waitlist — no phone tag.',
+    helps: 'Fewer empty tables, fewer no-shows, less time on the phone. Staff stays focused on guests.',
+    commercial: [
+      { name: 'OpenTable', url: 'https://restaurant.opentable.com/', desc: 'Industry standard with AI-driven waitlist and SMS reminders.' },
+      { name: 'Resy', url: 'https://resy.com/', desc: 'Modern booking with smart cancellation handling.' },
+      { name: 'Tock', url: 'https://www.exploretock.com/', desc: 'Reservations, prepaid bookings, and ticketed events.' }
+    ],
+    custom: [
+      { name: 'Calendly + Zapier + Twilio', desc: 'Customers book on Calendly, Zapier sends a confirmation text via Twilio, reminders go automatically.' },
+      { name: 'Google Forms + Sheets + automations', desc: 'Free booking system with auto-replies and calendar sync.' }
+    ],
+    workflow: [
+      { label: 'Customer books', detail: 'Picks time on website or Google', icon: 'eye' },
+      { label: 'Calendar updates', detail: 'Slot reserved automatically', icon: 'database' },
+      { label: 'Reminder sent', detail: '24 hours before — reduces no-shows', icon: 'bell' },
+      { label: 'Cancellation? Waitlist fills', detail: 'AI texts next person on waitlist', icon: 'message' },
+      { label: 'Guest arrives', detail: 'Staff has notes, prefs, history', icon: 'check' }
+    ],
+    refs: [
+      { name: 'OpenTable for restaurants', url: 'https://restaurant.opentable.com/' }
+    ]
+  },
+  orderTaking: {
+    title: 'AI Order Taking & Drive-Thru',
+    plain: 'A voice AI takes phone or drive-thru orders, answers menu questions, and sends the order straight to your kitchen system.',
+    helps: 'Never miss a phone order during rush. No accents or background noise problems if set up right.',
+    commercial: [
+      { name: 'SoundHound for Restaurants', url: 'https://www.soundhound.com/restaurants/', desc: 'Voice AI for phone and drive-thru orders.' },
+      { name: 'Slang.ai', url: 'https://www.slang.ai/', desc: 'AI phone agent purpose-built for restaurants.' },
+      { name: 'PolyAI', url: 'https://poly.ai/', desc: 'Voice AI agent for inbound calls.' }
+    ],
+    custom: [
+      { name: 'Twilio + OpenAI Realtime API', desc: 'Build a custom voice agent that answers your business line and takes orders in your menu\'s language.' },
+      { name: 'Vapi.ai', desc: 'No-code voice AI builder — connect to your phone number in minutes.' }
+    ],
+    workflow: [
+      { label: 'Phone rings', detail: 'AI answers in your brand voice', icon: 'message' },
+      { label: 'Order taken', detail: 'AI confirms each item, asks about modifiers', icon: 'brain' },
+      { label: 'Sent to kitchen', detail: 'Pushed to POS / kitchen display', icon: 'database' },
+      { label: 'Customer notified', detail: 'Text with pickup time', icon: 'bell' },
+      { label: 'Order ready', detail: 'You focus on cooking, not phones', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Slang.ai for restaurants', url: 'https://www.slang.ai/' }
+    ]
+  },
+  demandPredict: {
+    title: 'Demand Prediction',
+    plain: 'AI looks at weather, events, holidays, and your past data to predict how many guests you\'ll have each day — so you prep the right amount.',
+    helps: 'Less food waste, less running out, better staffing. Saves both money and stress.',
+    commercial: [
+      { name: 'Toast Forecasting', url: 'https://pos.toasttab.com/products/sales-summary', desc: 'Built into Toast POS — predicts daily covers.' },
+      { name: 'BlueCart', url: 'https://www.bluecart.com/', desc: 'Inventory and demand forecasting for restaurants.' }
+    ],
+    custom: [
+      { name: 'Sheets + weather API + GPT', desc: 'Free combo: pull weather forecast, paste with last year\'s sales, ask GPT for an estimate.' }
+    ],
+    workflow: [
+      { label: 'Historical data', detail: 'Last year\'s covers by day', icon: 'database' },
+      { label: 'External factors', detail: 'Weather, local events, holidays', icon: 'eye' },
+      { label: 'AI forecasts', detail: 'Estimated guests for each day ahead', icon: 'brain' },
+      { label: 'Prep adjusted', detail: 'Order food, schedule staff', icon: 'check' },
+      { label: 'Reality measured', detail: 'AI learns from misses for next time', icon: 'chart' }
+    ],
+    refs: [
+      { name: 'Restaurant forecasting basics', url: 'https://pos.toasttab.com/blog/on-the-line/sales-forecasting' }
+    ]
+  },
+  staffSchedule: {
+    title: 'Staff Scheduling',
+    plain: 'AI builds the weekly schedule based on predicted demand, employee availability, labor laws, and time-off requests — in seconds, not hours.',
+    helps: 'Cuts scheduling time from 4 hours to 15 minutes. Reduces overstaffing during slow periods.',
+    commercial: [
+      { name: 'When I Work', url: 'https://wheniwork.com/', desc: 'Auto-scheduling with AI suggestions.' },
+      { name: '7shifts', url: 'https://www.7shifts.com/', desc: 'Restaurant scheduling with labor cost optimization.' },
+      { name: 'Homebase', url: 'https://www.joinhomebase.com/', desc: 'Free scheduling for small teams with AI features.' }
+    ],
+    custom: [
+      { name: 'Google Sheets + ChatGPT', desc: 'Paste availability and demand forecast, ask GPT to draft a schedule honoring constraints.' }
+    ],
+    workflow: [
+      { label: 'Demand forecast', detail: 'Predicted busy/slow periods', icon: 'chart' },
+      { label: 'Staff availability', detail: 'Time-off, prefs, max hours', icon: 'user' },
+      { label: 'AI builds schedule', detail: 'Optimizes labor cost vs coverage', icon: 'brain' },
+      { label: 'You review', detail: 'Quick approval, edit edge cases', icon: 'check' },
+      { label: 'Staff notified', detail: 'App pushes shifts to phones', icon: 'bell' }
+    ],
+    refs: [
+      { name: '7shifts AI scheduling', url: 'https://www.7shifts.com/auto-scheduling' }
+    ]
+  },
+  docDrafting: {
+    title: 'Document Drafting',
+    plain: 'AI writes first drafts of contracts, proposals, reports, letters — based on a short description from you. You edit; AI does the typing.',
+    helps: 'A 2-hour proposal becomes a 20-minute review. Frees up hours every week for billable work.',
+    commercial: [
+      { name: 'Microsoft Copilot', url: 'https://copilot.microsoft.com/', desc: 'AI inside Word, Outlook, Teams. Drafts from prompts or templates.' },
+      { name: 'Google Workspace Gemini', url: 'https://workspace.google.com/solutions/ai/', desc: 'Same idea inside Docs, Gmail, Sheets.' },
+      { name: 'Spellbook (legal)', url: 'https://www.spellbook.legal/', desc: 'AI drafting and review for contract attorneys.' }
+    ],
+    custom: [
+      { name: 'ChatGPT + your templates', desc: 'Save your firm\'s standard templates as a Custom GPT — anyone can produce on-brand drafts.' },
+      { name: 'Claude Projects', desc: 'Upload your style guide and past docs; Claude drafts new ones in your voice.' }
+    ],
+    workflow: [
+      { label: 'You give bullet points', detail: 'Key facts, recipient, goals', icon: 'message' },
+      { label: 'AI drafts document', detail: 'Uses your template and tone', icon: 'brain' },
+      { label: 'You review/edit', detail: 'Catch nuance, add specifics', icon: 'eye' },
+      { label: 'Final polish', detail: 'AI reformats, checks spelling', icon: 'check' },
+      { label: 'Sent to client', detail: 'Saved to your records', icon: 'mail' }
+    ],
+    refs: [
+      { name: 'Microsoft Copilot for SMBs', url: 'https://www.microsoft.com/en-us/microsoft-copilot/for-small-business' },
+      { name: 'Claude Projects guide', url: 'https://support.claude.com/' }
+    ]
+  },
+  clientIntake: {
+    title: 'Client Intake & Onboarding',
+    plain: 'A smart form (or chatbot) collects new client info, asks the right follow-up questions, and routes the case to the right person — automatically.',
+    helps: 'Cuts the back-and-forth at the start of a new project. Clients feel taken care of from minute one.',
+    commercial: [
+      { name: 'Clio Grow (legal)', url: 'https://www.clio.com/grow/', desc: 'Intake forms, e-sign, calendar all integrated for law firms.' },
+      { name: 'Typeform + AI', url: 'https://www.typeform.com/', desc: 'Conversational forms that adapt to answers.' },
+      { name: 'Jotform AI Agents', url: 'https://www.jotform.com/ai-agents/', desc: 'Chatbot intake that handles follow-ups.' }
+    ],
+    custom: [
+      { name: 'Tally + Zapier + ChatGPT', desc: 'Free form tool, then GPT summarizes responses and creates a draft intake memo.' },
+      { name: 'Airtable + automations', desc: 'Build your own pipeline; AI scores leads and assigns to staff.' }
+    ],
+    workflow: [
+      { label: 'Lead arrives', detail: 'Website form or referral', icon: 'user' },
+      { label: 'Smart questions', detail: 'AI asks based on what they need', icon: 'message' },
+      { label: 'Info captured', detail: 'Saved into your CRM/system', icon: 'database' },
+      { label: 'Auto-summary', detail: 'AI drafts intake memo', icon: 'brain' },
+      { label: 'Routed to staff', detail: 'Assigned to right person with brief', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Jotform AI agents', url: 'https://www.jotform.com/ai-agents/' }
+    ]
+  },
+  research: {
+    title: 'AI-Powered Research',
+    plain: 'Need to look into a market, a defendant, a tax rule, or a competitor? AI reads dozens of sources and gives you a summary with citations.',
+    helps: 'What used to be 4 hours of Googling becomes 15 minutes of reviewing.',
+    commercial: [
+      { name: 'Perplexity Pro', url: 'https://www.perplexity.ai/', desc: 'AI search with sources — great for general research.' },
+      { name: 'Lexis+ AI (legal)', url: 'https://www.lexisnexis.com/en-us/products/lexis-plus-ai.page', desc: 'Legal research with verified citations.' },
+      { name: 'Harvey (legal)', url: 'https://www.harvey.ai/', desc: 'Enterprise legal AI for research and drafting.' }
+    ],
+    custom: [
+      { name: 'ChatGPT/Claude with web search', desc: 'Ask, "Research X and give me 5 sources I can verify."' },
+      { name: 'NotebookLM', desc: 'Upload PDFs and articles; AI answers questions only from those sources — no hallucinations.' }
+    ],
+    workflow: [
+      { label: 'You ask a question', detail: 'In plain language', icon: 'message' },
+      { label: 'AI searches', detail: 'Web, your docs, or trusted sources', icon: 'eye' },
+      { label: 'Sources analyzed', detail: 'Reads and weighs each one', icon: 'brain' },
+      { label: 'Summary returned', detail: 'With citations you can verify', icon: 'database' },
+      { label: 'You verify key claims', detail: 'Always check important facts', icon: 'check' }
+    ],
+    refs: [
+      { name: 'NotebookLM by Google', url: 'https://notebooklm.google/' },
+      { name: 'Perplexity for professionals', url: 'https://www.perplexity.ai/enterprise' }
+    ]
+  },
+  invoicing: {
+    title: 'Smart Invoicing & Billing',
+    plain: 'AI tracks your hours or services delivered, drafts invoices, sends them, and chases up unpaid ones — politely but persistently.',
+    helps: 'Cuts admin time by half and gets you paid 1-2 weeks faster on average.',
+    commercial: [
+      { name: 'QuickBooks Online', url: 'https://quickbooks.intuit.com/online/', desc: 'AI categorization, smart invoicing, and follow-ups.' },
+      { name: 'FreshBooks', url: 'https://www.freshbooks.com/', desc: 'Built for service businesses with AI receipt capture.' },
+      { name: 'Wave', url: 'https://www.waveapps.com/', desc: 'Free invoicing for very small businesses.' }
+    ],
+    custom: [
+      { name: 'Zapier + QuickBooks + Gmail', desc: 'When invoice is 7 days overdue, GPT writes a polite reminder, Gmail sends it.' },
+      { name: 'Stripe + automations', desc: 'Auto-send receipts, retry failed payments, draft refund replies.' }
+    ],
+    workflow: [
+      { label: 'Work tracked', detail: 'Hours, services, products logged', icon: 'database' },
+      { label: 'Invoice drafted', detail: 'AI fills in line items and totals', icon: 'brain' },
+      { label: 'You approve', detail: 'Quick check, send', icon: 'check' },
+      { label: 'Client receives + pays', detail: 'Click-to-pay link included', icon: 'mail' },
+      { label: 'Auto-followup if late', detail: 'Polite nudge after 7, 14, 30 days', icon: 'bell' }
+    ],
+    refs: [
+      { name: 'QuickBooks AI features', url: 'https://quickbooks.intuit.com/' }
+    ]
+  },
+  meetingNotes: {
+    title: 'Meeting Notes & Summaries',
+    plain: 'AI joins your Zoom/Teams calls (or listens to recordings), writes accurate notes, lists action items, and emails everyone the recap.',
+    helps: 'You stay present in the meeting. Action items don\'t get forgotten. New team members can catch up fast.',
+    commercial: [
+      { name: 'Otter.ai', url: 'https://otter.ai/', desc: 'Live transcripts, summaries, action items.' },
+      { name: 'Fireflies.ai', url: 'https://fireflies.ai/', desc: 'AI notetaker that integrates with most CRMs.' },
+      { name: 'Zoom AI Companion', url: 'https://www.zoom.com/en/ai-assistant/', desc: 'Built into Zoom — summarizes meetings instantly.' }
+    ],
+    custom: [
+      { name: 'Whisper + Claude/GPT', desc: 'Record the meeting, transcribe with Whisper (open source), summarize with Claude or GPT.' }
+    ],
+    workflow: [
+      { label: 'Meeting starts', detail: 'AI joins or records', icon: 'message' },
+      { label: 'Live transcript', detail: 'Every word captured', icon: 'database' },
+      { label: 'AI summarizes', detail: 'Decisions, action items, owners', icon: 'brain' },
+      { label: 'Email sent', detail: 'Recap to all attendees', icon: 'mail' },
+      { label: 'Tasks tracked', detail: 'Auto-pushed to your task tool', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Otter.ai for business', url: 'https://otter.ai/business' }
+    ]
+  },
+  jobScheduling: {
+    title: 'Job Scheduling & Dispatch',
+    plain: 'AI books jobs into the calendar, assigns the right tech, sends reminders, and handles reschedules — like a virtual office manager.',
+    helps: 'No more calendar Tetris. Customers self-book online; you don\'t lose jobs to voicemail.',
+    commercial: [
+      { name: 'Jobber', url: 'https://getjobber.com/', desc: 'Field service software with smart scheduling.' },
+      { name: 'Housecall Pro', url: 'https://www.housecallpro.com/', desc: 'Built for trades — scheduling, dispatch, payments.' },
+      { name: 'ServiceTitan', url: 'https://www.servicetitan.com/', desc: 'Enterprise-grade for HVAC, plumbing, electrical.' }
+    ],
+    custom: [
+      { name: 'Calendly + Google Calendar + Zapier', desc: 'Customer books online, GPT confirms via SMS, calendar updates everywhere.' }
+    ],
+    workflow: [
+      { label: 'Customer requests job', detail: 'Online or via phone', icon: 'user' },
+      { label: 'AI checks availability', detail: 'Of techs, parts, location', icon: 'brain' },
+      { label: 'Best slot offered', detail: 'Considers travel time and skills', icon: 'database' },
+      { label: 'Confirmed via text', detail: 'Auto-reminder day before', icon: 'bell' },
+      { label: 'Tech dispatched', detail: 'Has full job brief on phone', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Jobber for trades', url: 'https://getjobber.com/industries/' }
+    ]
+  },
+  quoting: {
+    title: 'AI-Powered Quoting & Estimates',
+    plain: 'Customer sends a photo or describes the job; AI gives an instant ballpark quote based on your historical pricing.',
+    helps: 'Win more leads — speed of response matters more than anything in trades. AI quotes in 2 minutes vs 2 days.',
+    commercial: [
+      { name: 'Jobber Quotes', url: 'https://getjobber.com/quoting/', desc: 'Built-in quote generation with templates.' },
+      { name: 'Joist', url: 'https://www.joistapp.com/', desc: 'Free contractor quoting app.' }
+    ],
+    custom: [
+      { name: 'GPT-4 with vision + Zapier', desc: 'Customer texts a photo of the job. AI analyzes, looks up your rates, sends back a ballpark within 60 seconds.' },
+      { name: 'Google Sheets + form + GPT', desc: 'Build a custom estimator using your job history as the training data.' }
+    ],
+    workflow: [
+      { label: 'Customer sends photo/desc', detail: 'Via SMS, web form, or app', icon: 'eye' },
+      { label: 'AI sizes the job', detail: 'Estimates labor and materials', icon: 'brain' },
+      { label: 'Pulls your pricing', detail: 'From your rate database', icon: 'database' },
+      { label: 'Quote sent', detail: 'Within 2 minutes — way faster than competitors', icon: 'mail' },
+      { label: 'Customer accepts', detail: 'Click to schedule the job', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Jobber quoting', url: 'https://getjobber.com/quoting/' }
+    ]
+  },
+  routeOptimize: {
+    title: 'Route Optimization',
+    plain: 'AI plans the most efficient driving order between today\'s jobs — saves gas, time, and stress.',
+    helps: 'Trades businesses typically squeeze in 1-2 extra jobs per day. Big fuel savings.',
+    commercial: [
+      { name: 'Routific', url: 'https://routific.com/', desc: 'Route planning for delivery and field service.' },
+      { name: 'OptimoRoute', url: 'https://optimoroute.com/', desc: 'Daily route plans with live updates.' },
+      { name: 'Google Maps Platform', url: 'https://mapsplatform.google.com/', desc: 'Build your own with their routing API.' }
+    ],
+    custom: [
+      { name: 'Google My Maps + manual planning', desc: 'Free for small teams; plot your stops and let Maps order them.' }
+    ],
+    workflow: [
+      { label: 'Today\'s jobs loaded', detail: 'Addresses + time windows', icon: 'database' },
+      { label: 'Traffic checked', detail: 'Live conditions factored in', icon: 'eye' },
+      { label: 'AI plans best order', detail: 'Minimizes drive time', icon: 'brain' },
+      { label: 'Route pushed to phones', detail: 'Each tech gets turn-by-turn', icon: 'bell' },
+      { label: 'On-time arrivals', detail: 'Fewer late jobs, more jobs done', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Routific for SMBs', url: 'https://routific.com/' }
+    ]
+  },
+  leadFollowup: {
+    title: 'Lead Follow-up & Nurturing',
+    plain: 'AI texts or emails leads on your behalf — answers their questions, books appointments, and re-engages cold leads — without you lifting a finger.',
+    helps: 'Most leads die from slow follow-up. AI replies in seconds and never forgets to circle back.',
+    commercial: [
+      { name: 'HubSpot', url: 'https://www.hubspot.com/', desc: 'CRM with AI-powered email and chat sequences.' },
+      { name: 'GoHighLevel', url: 'https://www.gohighlevel.com/', desc: 'Marketing + CRM popular with agencies and trades.' },
+      { name: 'Salesforce Einstein', url: 'https://www.salesforce.com/products/einstein/', desc: 'Enterprise AI sales assistant.' }
+    ],
+    custom: [
+      { name: 'Zapier + Twilio + GPT', desc: 'New lead arrives → GPT drafts reply → Twilio texts them → keeps trying every few days until they respond.' },
+      { name: 'Make.com + HubSpot + Claude', desc: 'Sophisticated drip campaigns where Claude personalizes each touch.' }
+    ],
+    workflow: [
+      { label: 'Lead arrives', detail: 'From web form, ad, referral', icon: 'user' },
+      { label: 'Instant reply', detail: 'AI texts within 60 seconds', icon: 'message' },
+      { label: 'Conversation', detail: 'AI answers questions, books appt', icon: 'brain' },
+      { label: 'Cold? Nurture', detail: 'Periodic touches over weeks/months', icon: 'bell' },
+      { label: 'Hot lead alerted', detail: 'You jump in for the close', icon: 'check' }
+    ],
+    refs: [
+      { name: 'HubSpot for SMBs', url: 'https://www.hubspot.com/products/sales' }
+    ]
+  },
+  reviewMgmt: {
+    title: 'Review Generation & Reply',
+    plain: 'AI politely asks happy customers for reviews after each job, then drafts personal responses to every review — good or bad.',
+    helps: 'More 5-star reviews = more leads. Quick responses to bad ones limit the damage.',
+    commercial: [
+      { name: 'Birdeye', url: 'https://birdeye.com/', desc: 'Review requests, monitoring, AI-drafted replies.' },
+      { name: 'NiceJob', url: 'https://www.nicejob.com/', desc: 'Affordable for trades and local businesses.' },
+      { name: 'Podium', url: 'https://www.podium.com/', desc: 'Reviews + texting + payments combined.' }
+    ],
+    custom: [
+      { name: 'Zapier + Google Reviews + GPT', desc: 'Job complete → text the customer asking for a review → if they leave one, GPT drafts a personalized thank-you reply.' }
+    ],
+    workflow: [
+      { label: 'Job complete', detail: 'Triggered by your CRM', icon: 'check' },
+      { label: 'Review request sent', detail: 'Friendly text 1 day later', icon: 'message' },
+      { label: 'Review posted', detail: 'On Google, Yelp, Facebook', icon: 'eye' },
+      { label: 'AI drafts reply', detail: 'You approve in one tap', icon: 'brain' },
+      { label: 'Posted publicly', detail: 'Shows you care to future customers', icon: 'mail' }
+    ],
+    refs: [
+      { name: 'NiceJob for SMBs', url: 'https://www.nicejob.com/' }
+    ]
+  },
+  booking: {
+    title: 'Online Booking & Scheduling',
+    plain: 'Clients self-book appointments 24/7 from your website, Instagram, or Google. AI handles reminders, rescheduling, and your calendar.',
+    helps: 'Half of bookings happen outside business hours. No phone tag, no double-bookings, fewer no-shows.',
+    commercial: [
+      { name: 'Square Appointments', url: 'https://squareup.com/us/en/appointments', desc: 'Free for solo professionals, integrates with payments.' },
+      { name: 'Mindbody', url: 'https://www.mindbodyonline.com/', desc: 'Built for fitness, salons, wellness.' },
+      { name: 'Vagaro', url: 'https://www.vagaro.com/', desc: 'Beauty, fitness, and wellness booking.' },
+      { name: 'Acuity Scheduling', url: 'https://acuityscheduling.com/', desc: 'Flexible scheduler from Squarespace.' }
+    ],
+    custom: [
+      { name: 'Calendly + Stripe + Zapier', desc: 'Free or low-cost combo for solo operators — book, pay, get reminders.' }
+    ],
+    workflow: [
+      { label: 'Client picks time', detail: 'On website or Instagram', icon: 'eye' },
+      { label: 'Calendar updated', detail: 'Synced to your phone', icon: 'database' },
+      { label: 'Confirmation sent', detail: 'Email + text immediately', icon: 'mail' },
+      { label: 'Reminder day before', detail: 'Cuts no-shows by 50%', icon: 'bell' },
+      { label: 'Client arrives', detail: 'Or reschedules with one tap', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Square Appointments', url: 'https://squareup.com/us/en/appointments' }
+    ]
+  },
+  socialContent: {
+    title: 'Social Media Content',
+    plain: 'AI writes captions, picks hashtags, suggests post times, and even generates image ideas — based on your brand and what\'s working.',
+    helps: '80% less time spent posting. Consistency = more followers and bookings.',
+    commercial: [
+      { name: 'Canva Magic Studio', url: 'https://www.canva.com/magic-studio/', desc: 'AI image and copy generation built into Canva.' },
+      { name: 'Buffer AI Assistant', url: 'https://buffer.com/ai-assistant', desc: 'Schedule + AI captions for any platform.' },
+      { name: 'Later', url: 'https://later.com/', desc: 'Visual planning with AI caption help.' }
+    ],
+    custom: [
+      { name: 'ChatGPT + Canva', desc: 'Write a week of captions in 10 minutes; design with Canva templates.' },
+      { name: 'Notion + AI', desc: 'Plan content calendars with AI-generated drafts in Notion.' }
+    ],
+    workflow: [
+      { label: 'Brand info gathered', detail: 'Tone, audience, services', icon: 'database' },
+      { label: 'AI drafts posts', detail: 'Captions, hashtags, image ideas', icon: 'brain' },
+      { label: 'You review/tweak', detail: 'Add personality, approve', icon: 'eye' },
+      { label: 'Scheduled', detail: 'Posted automatically at best times', icon: 'bell' },
+      { label: 'Engagement tracked', detail: 'AI learns what works', icon: 'chart' }
+    ],
+    refs: [
+      { name: 'Buffer AI Assistant', url: 'https://buffer.com/ai-assistant' }
+    ]
+  },
+  personalOffers: {
+    title: 'Personalized Offers & Promotions',
+    plain: 'AI groups your clients by behavior (frequent visitor, lapsed customer, big spender) and sends each group a tailored offer.',
+    helps: 'A targeted offer converts 5–10x better than a generic blast. Brings back lapsed clients.',
+    commercial: [
+      { name: 'Mindbody Marketing Suite', url: 'https://www.mindbodyonline.com/', desc: 'Built-in client segmentation for fitness/wellness.' },
+      { name: 'Klaviyo', url: 'https://www.klaviyo.com/', desc: 'Powerful segmentation and AI-driven campaigns.' },
+      { name: 'Mailchimp', url: 'https://mailchimp.com/', desc: 'AI-driven audience segmentation and recommendations.' }
+    ],
+    custom: [
+      { name: 'Sheets + Mailchimp + GPT', desc: 'Segment clients in a sheet, GPT writes a unique offer per segment, Mailchimp sends.' }
+    ],
+    workflow: [
+      { label: 'Client data analyzed', detail: 'Visit frequency, spend, last visit', icon: 'database' },
+      { label: 'Segments created', detail: 'VIPs, lapsed, new, occasional', icon: 'brain' },
+      { label: 'Offers tailored', detail: 'Different deal per segment', icon: 'message' },
+      { label: 'Campaign sent', detail: 'Email or SMS', icon: 'mail' },
+      { label: 'Bookings increase', detail: 'Track which offers worked', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Mailchimp segmentation', url: 'https://mailchimp.com/features/audience-segmentation/' }
+    ]
+  },
+  noShowPredict: {
+    title: 'No-Show Prediction',
+    plain: 'AI flags which appointments are likely to be no-shows (based on history, weather, time of day) so you can confirm or overbook smartly.',
+    helps: 'No-shows cost the average salon/gym thousands per year. Catching them early saves real money.',
+    commercial: [
+      { name: 'Mindbody Smart Notifications', url: 'https://www.mindbodyonline.com/', desc: 'Built into the platform.' },
+      { name: 'Square Appointments', url: 'https://squareup.com/us/en/appointments', desc: 'Risk scoring with deposit options.' }
+    ],
+    custom: [
+      { name: 'Sheets + GPT', desc: 'Track past no-shows in a sheet; GPT scores upcoming appointments by risk.' }
+    ],
+    workflow: [
+      { label: 'Booking made', detail: 'Client schedules service', icon: 'database' },
+      { label: 'AI scores risk', detail: 'Based on history, time, weather', icon: 'brain' },
+      { label: 'High risk? Confirm', detail: 'Extra reminder, request deposit', icon: 'bell' },
+      { label: 'Slot rebooked if cancel', detail: 'Auto-text waitlist', icon: 'message' },
+      { label: 'Capacity protected', detail: 'Revenue stays steady', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Mindbody for fitness', url: 'https://www.mindbodyonline.com/' }
+    ]
+  },
+  clientRetention: {
+    title: 'Client Retention & Win-Back',
+    plain: 'AI notices when a regular hasn\'t come in for a while and triggers a personalized check-in to bring them back.',
+    helps: 'Keeping a client is 5x cheaper than getting a new one. AI catches at-risk regulars before they\'re gone.',
+    commercial: [
+      { name: 'Vagaro Marketing', url: 'https://www.vagaro.com/', desc: 'Auto win-back campaigns built in.' },
+      { name: 'Klaviyo', url: 'https://www.klaviyo.com/', desc: 'Predictive churn modeling for ecommerce/services.' }
+    ],
+    custom: [
+      { name: 'CRM + Zapier + GPT', desc: 'When a client hasn\'t booked in 60 days, GPT writes a "we miss you" note with a personalized offer.' }
+    ],
+    workflow: [
+      { label: 'Activity monitored', detail: 'Last visit, frequency tracked', icon: 'database' },
+      { label: 'AI flags at-risk', detail: 'Hasn\'t visited in X days', icon: 'brain' },
+      { label: 'Personal note sent', detail: 'With a small reactivation offer', icon: 'mail' },
+      { label: 'Client returns', detail: 'Or you learn why they stopped', icon: 'message' },
+      { label: 'Loyalty grows', detail: 'Lifetime value goes up', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Klaviyo predictive analytics', url: 'https://www.klaviyo.com/' }
+    ]
+  },
+  serviceReminders: {
+    title: 'Service Reminders',
+    plain: 'AI knows when a customer is due for an oil change, AC tune-up, dental cleaning, or annual review — and texts them politely.',
+    helps: 'Recurring revenue happens automatically. Customers feel taken care of.',
+    commercial: [
+      { name: 'Shopmonkey', url: 'https://www.shopmonkey.io/', desc: 'Auto repair shop software with reminder automation.' },
+      { name: 'AutoLeap', url: 'https://autoleap.com/', desc: 'Modern auto repair management with AI features.' }
+    ],
+    custom: [
+      { name: 'Sheets + Zapier + Twilio', desc: 'Track customer service dates; Zapier triggers reminder texts via Twilio when due.' }
+    ],
+    workflow: [
+      { label: 'Service done', detail: 'Logged with date and notes', icon: 'database' },
+      { label: 'Next due calculated', detail: 'Based on time or usage', icon: 'brain' },
+      { label: 'Reminder timed', detail: '2 weeks before due date', icon: 'bell' },
+      { label: 'Personal message sent', detail: '"Hi Sarah, your AC is due..."', icon: 'message' },
+      { label: 'Booking made', detail: 'One-tap rebook', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Shopmonkey for shops', url: 'https://www.shopmonkey.io/' }
+    ]
+  },
+  partsLookup: {
+    title: 'Parts Lookup & Repair Diagnostics',
+    plain: 'Tech describes the symptom; AI suggests likely fixes, looks up parts in your inventory or supplier catalog, and prices the job.',
+    helps: 'New techs get up to speed faster. Diagnostics are more consistent. Less time hunting parts.',
+    commercial: [
+      { name: 'Mitchell 1', url: 'https://mitchell1.com/', desc: 'Auto repair info system, increasingly AI-augmented.' },
+      { name: 'Identifix', url: 'https://www.identifix.com/', desc: 'Repair database with AI diagnostic suggestions.' }
+    ],
+    custom: [
+      { name: 'Custom GPT trained on your manuals', desc: 'Upload service manuals and your past repairs; build a Custom GPT your team queries from any phone.' }
+    ],
+    workflow: [
+      { label: 'Symptom described', detail: 'Tech types or speaks issue', icon: 'message' },
+      { label: 'AI suggests causes', detail: 'Ranked by likelihood', icon: 'brain' },
+      { label: 'Parts identified', detail: 'Cross-referenced with inventory', icon: 'database' },
+      { label: 'Quote drafted', detail: 'Labor + parts estimate', icon: 'chart' },
+      { label: 'Customer approves', detail: 'Work begins', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Mitchell 1 ProDemand', url: 'https://mitchell1.com/' }
+    ]
+  },
+  listings: {
+    title: 'AI Property Listings',
+    plain: 'AI writes engaging property descriptions from photos and basic facts, generates social posts, and creates branded flyers in seconds.',
+    helps: 'A listing description that took 30 minutes now takes 2. Listings sound professional and consistent.',
+    commercial: [
+      { name: 'Listing Copy AI', url: 'https://www.listingcopy.ai/', desc: 'Purpose-built for real estate listings.' },
+      { name: 'Canva + Magic Write', url: 'https://www.canva.com/magic-write/', desc: 'Flyers, social posts, and copy from prompts.' },
+      { name: 'Lofty (formerly Chime)', url: 'https://lofty.com/', desc: 'Real estate CRM with AI listing tools.' }
+    ],
+    custom: [
+      { name: 'ChatGPT with your photos', desc: 'Drop in property photos and key facts; ChatGPT (vision) writes the description.' }
+    ],
+    workflow: [
+      { label: 'Photos + facts entered', detail: 'Bedrooms, sqft, features', icon: 'database' },
+      { label: 'AI writes description', detail: 'Compelling, accurate, MLS-ready', icon: 'brain' },
+      { label: 'Variants for each channel', detail: 'MLS, Instagram, email, flyer', icon: 'message' },
+      { label: 'You approve', detail: 'Quick edit for fair-housing compliance', icon: 'check' },
+      { label: 'Posted everywhere', detail: 'Hours of work in minutes', icon: 'mail' }
+    ],
+    refs: [
+      { name: 'Listing Copy AI', url: 'https://www.listingcopy.ai/' }
+    ]
+  },
+  adTargeting: {
+    title: 'Ad Targeting & Optimization',
+    plain: 'AI builds and tests Facebook/Google ad audiences, automatically shifts budget to what\'s working, and writes ad copy variations.',
+    helps: 'Get more leads for the same ad spend. AI never sleeps and tests constantly.',
+    commercial: [
+      { name: 'Meta Advantage+', url: 'https://www.facebook.com/business/ads/advantage', desc: 'Facebook/Instagram\'s AI-driven ad campaigns.' },
+      { name: 'Google Performance Max', url: 'https://ads.google.com/intl/en_us/home/campaigns/performance-max-campaigns/', desc: 'AI-optimized campaigns across Google\'s network.' },
+      { name: 'AdCreative.ai', url: 'https://www.adcreative.ai/', desc: 'AI-generated ad creative and copy variations.' }
+    ],
+    custom: [
+      { name: 'ChatGPT + Meta Ads Manager', desc: 'GPT writes 20 ad variations; you upload and let Meta\'s AI pick winners.' }
+    ],
+    workflow: [
+      { label: 'Goal defined', detail: 'Leads, sales, traffic', icon: 'message' },
+      { label: 'AI builds audience', detail: 'Lookalikes, interests, behaviors', icon: 'brain' },
+      { label: 'Variations created', detail: 'Multiple ad copies and images', icon: 'database' },
+      { label: 'Live testing', detail: 'AI shifts budget to winners', icon: 'chart' },
+      { label: 'Reports back', detail: 'You see what\'s working and why', icon: 'eye' }
+    ],
+    refs: [
+      { name: 'Meta Advantage+', url: 'https://www.facebook.com/business/ads/advantage' }
+    ]
+  },
+  contractReview: {
+    title: 'Contract & Document Review',
+    plain: 'Drag in any contract — AI summarizes it, flags risky clauses, compares it to your standard terms, and explains the legalese.',
+    helps: 'Catch unfavorable terms before signing. Review 10 contracts in the time it took to do 1.',
+    commercial: [
+      { name: 'Spellbook', url: 'https://www.spellbook.legal/', desc: 'Contract review for attorneys and small firms.' },
+      { name: 'LawGeex', url: 'https://www.lawgeex.com/', desc: 'AI contract review with workflow tools.' },
+      { name: 'Ironclad', url: 'https://ironcladapp.com/', desc: 'Enterprise contract management with AI.' }
+    ],
+    custom: [
+      { name: 'Claude or ChatGPT (with care)', desc: 'Upload a contract, ask: "Summarize, list risks, compare to NAR standard." Always have a lawyer review high-stakes deals.' }
+    ],
+    workflow: [
+      { label: 'Contract uploaded', detail: 'PDF or Word document', icon: 'database' },
+      { label: 'AI reads and summarizes', detail: 'Plain-English overview', icon: 'brain' },
+      { label: 'Risks flagged', detail: 'Unusual or unfavorable terms', icon: 'eye' },
+      { label: 'Compared to standard', detail: 'Your firm\'s usual terms', icon: 'chart' },
+      { label: 'You decide', detail: 'Sign, negotiate, or walk', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Spellbook for SMB law firms', url: 'https://www.spellbook.legal/' }
+    ]
+  },
+  virtualStaging: {
+    title: 'Virtual Staging & 3D Tours',
+    plain: 'AI furnishes empty rooms in photos digitally — and builds shareable 3D walkthroughs from a few photos.',
+    helps: 'Empty homes sell slower. Virtual staging costs ~$30 per room vs $500+ for physical staging.',
+    commercial: [
+      { name: 'Virtual Staging AI', url: 'https://www.virtualstagingai.app/', desc: 'Upload empty room → get 4 furnished versions in seconds.' },
+      { name: 'Matterport', url: 'https://matterport.com/', desc: 'Industry-standard 3D tours; AI features built in.' },
+      { name: 'BoxBrownie', url: 'https://www.boxbrownie.com/', desc: 'AI-powered photo enhancement for listings.' }
+    ],
+    custom: [
+      { name: 'DALL-E / Midjourney + photo editing', desc: 'For one-off projects, AI image tools can create staged variations.' }
+    ],
+    workflow: [
+      { label: 'Photos taken', detail: 'Empty rooms, decent lighting', icon: 'eye' },
+      { label: 'AI furnishes', detail: 'Multiple style options', icon: 'brain' },
+      { label: 'You pick favorites', detail: 'Modern, traditional, etc.', icon: 'check' },
+      { label: 'Listed online', detail: 'With "virtually staged" disclosure', icon: 'mail' },
+      { label: 'More showings', detail: 'Buyers can imagine living there', icon: 'message' }
+    ],
+    refs: [
+      { name: 'Virtual Staging AI', url: 'https://www.virtualstagingai.app/' }
+    ]
+  },
+  lessonPlanning: {
+    title: 'Lesson Planning & Curriculum',
+    plain: 'AI builds personalized lesson plans, worksheets, and quizzes for each student\'s level — saving hours of prep.',
+    helps: 'A 2-hour lesson plan becomes 10 minutes. Each student gets material at their level.',
+    commercial: [
+      { name: 'MagicSchool', url: 'https://www.magicschool.ai/', desc: 'AI tools designed for educators.' },
+      { name: 'Khanmigo', url: 'https://www.khanmigo.ai/', desc: 'AI tutor and teacher assistant from Khan Academy.' },
+      { name: 'Diffit', url: 'https://web.diffit.me/', desc: 'Adapt any text to any reading level instantly.' }
+    ],
+    custom: [
+      { name: 'ChatGPT or Claude', desc: 'Free for solo tutors — generate worksheets, quizzes, and explanations on demand.' }
+    ],
+    workflow: [
+      { label: 'Topic + level set', detail: 'Subject, age, ability', icon: 'message' },
+      { label: 'AI builds plan', detail: 'Activities, examples, questions', icon: 'brain' },
+      { label: 'Materials generated', detail: 'Worksheets, quizzes, slides', icon: 'database' },
+      { label: 'You review', detail: 'Add personal touches', icon: 'eye' },
+      { label: 'Class delivered', detail: 'Student feedback feeds next plan', icon: 'check' }
+    ],
+    refs: [
+      { name: 'MagicSchool for teachers', url: 'https://www.magicschool.ai/' }
+    ]
+  },
+  studentFeedback: {
+    title: 'Student Feedback & Grading',
+    plain: 'AI reviews student work, offers detailed constructive feedback, and grades against a rubric — you spot-check and approve.',
+    helps: 'Personal feedback for every student, every assignment. Tutors do 3x the work in the same time.',
+    commercial: [
+      { name: 'MagicSchool', url: 'https://www.magicschool.ai/', desc: 'Includes feedback and rubric tools.' },
+      { name: 'Brisk Teaching', url: 'https://www.briskteaching.com/', desc: 'Chrome extension for feedback in Google Docs.' }
+    ],
+    custom: [
+      { name: 'ChatGPT/Claude with your rubric', desc: 'Paste student work and rubric; AI returns scored feedback you review.' }
+    ],
+    workflow: [
+      { label: 'Work submitted', detail: 'Student uploads or shares', icon: 'database' },
+      { label: 'AI reads + scores', detail: 'Per your rubric', icon: 'brain' },
+      { label: 'Feedback drafted', detail: 'Specific, kind, actionable', icon: 'message' },
+      { label: 'You review', detail: 'Edit tone, catch nuance', icon: 'eye' },
+      { label: 'Returned to student', detail: 'They learn faster', icon: 'check' }
+    ],
+    refs: [
+      { name: 'Brisk Teaching', url: 'https://www.briskteaching.com/' }
+    ]
+  }
+};
+
+/* ============================================================
+   ICON LIBRARY for workflow steps
+   ============================================================ */
+const ICONS = {
+  cart: '<path d="M2 4h2l3 14h13l3-10H6"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/>',
+  database: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.6 3.6 3 8 3s8-1.4 8-3V5M4 11v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"/>',
+  brain: '<path d="M9 3a3 3 0 0 0-3 3v1a3 3 0 0 0-3 3v2a3 3 0 0 0 1 2.2V16a3 3 0 0 0 5 2.8A3 3 0 0 0 14 16v-1.8A3 3 0 0 0 15 12v-2a3 3 0 0 0-3-3V6a3 3 0 0 0-3-3z"/><path d="M12 7v10"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-7"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/>',
+  message: '<path d="M21 12a8 8 0 0 1-12 7l-5 1 1-5a8 8 0 1 1 16-3z"/>'
+};
+
+/* ============================================================
+   STATE & ROUTING
+   ============================================================ */
+let state = { view: 'home', category: null, useCase: null };
+
+function go(view, opts = {}) {
+  state = { ...state, view, ...opts };
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function goHome()   { go('home', { category: null, useCase: null }); }
+function goCategories() { go('categories', { category: null, useCase: null }); }
+function goCategory(id) { go('category', { category: id, useCase: null }); }
+function goUseCase(uc) { go('useCase', { useCase: uc }); }
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render() {
+  const app = document.getElementById('app');
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = '';
+  app.innerHTML = '';
+
+  // Build breadcrumb
+  const crumbs = [{ label: 'Home', action: 'goHome()' }];
+  if (state.view !== 'home') crumbs.push({ label: 'Choose Business', action: 'goCategories()' });
+  if (state.category) crumbs.push({ label: BUSINESSES[state.category].name, action: `goCategory('${state.category}')` });
+  if (state.useCase) crumbs.push({ label: USE_CASES[state.useCase].title, action: '' });
+  crumbs.forEach((c, i) => {
+    const isLast = i === crumbs.length - 1;
+    const sep = i > 0 ? '<svg class="w-4 h-4 text-ink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" d="M9 5l7 7-7 7"/></svg>' : '';
+    bc.innerHTML += sep + (isLast || !c.action
+      ? `<span class="font-medium text-ink-900 dark:text-ink-100">${c.label}</span>`
+      : `<button onclick="${c.action}" class="hover:text-brand-600 dark:hover:text-brand-400 hover:underline">${c.label}</button>`);
+  });
+
+  // Render the view
+  switch (state.view) {
+    case 'home':       renderHome(app); break;
+    case 'categories': renderCategories(app); break;
+    case 'category':   renderCategory(app); break;
+    case 'useCase':    renderUseCase(app); break;
+  }
+}
+
+/* ----------------------- HOME ----------------------- */
+function renderHome(app) {
+  app.innerHTML = `
+    <div class="fade-in">
+      <!-- Hero -->
+      <section class="text-center py-8 sm:py-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-800 dark:text-brand-200 text-xs sm:text-sm font-medium mb-6">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
+          For small business owners who want results, not a tech degree
+        </div>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+          AI That Actually Helps Your <span class="bg-gradient-to-r from-brand-600 to-teal-600 bg-clip-text text-transparent">Business Run Better</span>
+        </h1>
+        <p class="mt-5 text-base sm:text-lg lg:text-xl text-ink-600 dark:text-ink-300 max-w-2xl mx-auto">
+          Pick your business type. See real AI tools you can actually use — with simple workflow diagrams, plain-English explanations, and links to both off-the-shelf products and DIY automation builds.
+        </p>
+        <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+          <button onclick="goCategories()"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold shadow-lg shadow-brand-600/30 transition-all hover:scale-[1.02]">
+            Find AI Tools for My Business
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </button>
+          <button onclick="openModal('How this guide works', getHowItWorksHtml())"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-white dark:bg-ink-800 border border-ink-300 dark:border-ink-700 hover:border-brand-500 hover:text-brand-700 dark:hover:text-brand-400 font-semibold transition-colors">
+            How this guide works
+          </button>
+        </div>
+      </section>
+
+      <!-- Pillars -->
+      <section class="grid sm:grid-cols-3 gap-4 sm:gap-6 my-8 sm:my-12">
+        ${pillarCard('🎯', 'Use Cases, Not Hype',
+          'Each idea comes with the real problem it solves and how much time or money it saves.')}
+        ${pillarCard('🛠️', 'Two Paths to Build',
+          'Off-the-shelf tools that work today, plus DIY builds with Zapier, Make, or n8n if you want to save money.')}
+        ${pillarCard('📊', 'Visual Workflows',
+          'Every use case includes a step-by-step diagram showing exactly what happens when AI takes over.')}
+      </section>
+
+      <!-- The 3-step idea -->
+      <section class="bg-white dark:bg-ink-900 rounded-2xl border border-ink-200 dark:border-ink-800 p-5 sm:p-8 my-8 sm:my-12 shadow-sm">
+        <h2 class="text-xl sm:text-2xl font-bold mb-6">How AI is enhancing small businesses today</h2>
+        <div class="grid sm:grid-cols-3 gap-4 sm:gap-6">
+          ${stepBlock('1', 'It does the boring stuff',
+            'AI handles repetitive work — answering common questions, writing first drafts, scheduling, reminders, follow-ups.')}
+          ${stepBlock('2', 'It spots patterns',
+            'AI reads your data and tells you when to reorder, who to follow up with, what\'s about to break, what your busiest day will be.')}
+          ${stepBlock('3', 'You stay in charge',
+            'AI drafts and suggests; you approve and ship. You\'re the boss. AI is your tireless intern who never asks for a raise.')}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="text-center py-8">
+        <p class="text-ink-600 dark:text-ink-300 mb-4">Ready to see what AI can do for your specific kind of business?</p>
+        <button onclick="goCategories()"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-brand-600 to-teal-600 text-white font-semibold shadow-lg hover:shadow-xl transition-shadow">
+          Get Started — Pick My Business Type
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </button>
+      </section>
+    </div>
+  `;
+}
+
+function pillarCard(emoji, title, desc) {
+  return `
+    <div class="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-5 hover:shadow-md transition-shadow">
+      <div class="text-3xl mb-3" aria-hidden="true">${emoji}</div>
+      <h3 class="font-bold text-base sm:text-lg mb-2">${title}</h3>
+      <p class="text-sm text-ink-600 dark:text-ink-300">${desc}</p>
+    </div>
+  `;
+}
+function stepBlock(num, title, desc) {
+  return `
+    <div>
+      <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-lg mb-3">${num}</div>
+      <h3 class="font-bold mb-1.5">${title}</h3>
+      <p class="text-sm text-ink-600 dark:text-ink-300">${desc}</p>
+    </div>
+  `;
+}
+function getHowItWorksHtml() {
+  return `
+    <div class="space-y-4">
+      <div>
+        <h4 class="font-semibold mb-1">Step 1 — Pick your business type</h4>
+        <p class="text-ink-600 dark:text-ink-300">Choose the category that best fits what you do. The guide tailors recommendations based on it.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-1">Step 2 — Browse use cases</h4>
+        <p class="text-ink-600 dark:text-ink-300">Each card shows a concrete way AI helps that business — with a one-line description and the impact it usually has.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-1">Step 3 — Open a use case</h4>
+        <p class="text-ink-600 dark:text-ink-300">You'll see a workflow diagram, plain-English explanation, two paths to build it (commercial product or DIY), and trustworthy links to learn more.</p>
+      </div>
+      <div class="bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800 rounded-lg p-3 mt-4">
+        <p class="text-sm"><strong>Tip:</strong> Look for the <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white dark:bg-ink-800 border border-ink-200 dark:border-ink-700 text-xs"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg> Plain English</span> buttons — they explain anything technical in everyday words.</p>
+      </div>
+    </div>
+  `;
+}
+
+/* ----------------------- CATEGORIES GRID ----------------------- */
+function renderCategories(app) {
+  const cards = Object.entries(BUSINESSES).map(([id, b]) => `
+    <button onclick="goCategory('${id}')"
+      class="group text-left bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-5 hover:border-brand-500 dark:hover:border-brand-400 hover:shadow-lg transition-all">
+      <div class="w-12 h-12 rounded-lg bg-gradient-to-br ${b.color} flex items-center justify-center text-white mb-3 shadow-md group-hover:scale-105 transition-transform">
+        ${b.iconSvg}
+      </div>
+      <h3 class="font-bold text-base sm:text-lg mb-1">${b.name}</h3>
+      <p class="text-sm text-ink-600 dark:text-ink-300 mb-3">${b.tagline}</p>
+      <div class="flex items-center gap-1.5 text-xs font-medium text-brand-600 dark:text-brand-400">
+        ${b.useCases.length} AI use cases
+        <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </div>
+    </button>
+  `).join('');
+
+  app.innerHTML = `
+    <div class="fade-in">
+      <div class="mb-6 sm:mb-8">
+        <h1 class="text-2xl sm:text-4xl font-extrabold mb-2">What kind of business do you run?</h1>
+        <p class="text-ink-600 dark:text-ink-300">Pick the closest match. Don't see yours exactly? "Freelancers & Solo Operators" works for almost anyone.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${cards}
+      </div>
+    </div>
+  `;
+}
+
+/* ----------------------- CATEGORY DETAIL ----------------------- */
+function renderCategory(app) {
+  const b = BUSINESSES[state.category];
+  const cards = b.useCases.map(uc => {
+    const u = USE_CASES[uc];
+    return `
+      <button onclick="goUseCase('${uc}')"
+        class="group text-left bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-xl p-5 hover:border-brand-500 dark:hover:border-brand-400 hover:shadow-lg transition-all">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 shrink-0 rounded-lg bg-brand-100 dark:bg-brand-950 flex items-center justify-center text-brand-700 dark:text-brand-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.091 3.091z"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-bold text-base sm:text-lg mb-1">${u.title}</h3>
+            <p class="text-sm text-ink-600 dark:text-ink-300 line-clamp-2">${u.plain}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 text-xs font-medium text-brand-600 dark:text-brand-400">
+          See workflow & tools
+          <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </div>
+      </button>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="fade-in">
+      <div class="bg-gradient-to-br ${b.color} rounded-2xl p-6 sm:p-8 text-white mb-8 shadow-lg">
+        <div class="flex items-center gap-4 mb-3">
+          <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+            ${b.iconSvg}
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold">${b.name}</h1>
+            <p class="text-white/90 text-sm sm:text-base">${b.tagline}</p>
+          </div>
+        </div>
+        <p class="text-white/90 text-sm sm:text-base max-w-2xl">
+          Below are the AI use cases that move the needle most for businesses like yours. Each one shows exactly how it works and which tools to consider.
+        </p>
+      </div>
+
+      <h2 class="text-xl sm:text-2xl font-bold mb-4">AI Use Cases for ${b.name}</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        ${cards}
+      </div>
+
+      <div class="mt-12 bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800 rounded-xl p-5 sm:p-6">
+        <h3 class="font-bold mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+          Where to start if you're brand-new to AI
+        </h3>
+        <p class="text-sm text-ink-700 dark:text-ink-200">
+          Pick the one use case that drains the most of your time today. Try it for two weeks. Measure the result. Then add the next one. Don't try to automate everything at once — that's how good ideas die.
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+/* ----------------------- USE CASE DETAIL ----------------------- */
+function renderUseCase(app) {
+  const u = USE_CASES[state.useCase];
+  const b = state.category ? BUSINESSES[state.category] : null;
+
+  app.innerHTML = `
+    <div class="fade-in space-y-8">
+      <!-- Header -->
+      <header>
+        <div class="flex items-center gap-2 text-sm text-brand-600 dark:text-brand-400 font-medium mb-2">
+          ${b ? `For: ${b.name}` : 'AI Use Case'}
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold mb-3">${u.title}</h1>
+        <p class="text-base sm:text-lg text-ink-700 dark:text-ink-200 max-w-3xl">${u.plain}</p>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button onclick='openModal("In Plain English: ${escapeJs(u.title)}", getPlainEnglishHtml(${JSON.stringify(state.useCase)}))'
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-800 dark:text-brand-200 text-xs sm:text-sm font-medium hover:bg-brand-200 dark:hover:bg-brand-900 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4M12 16h.01"/></svg>
+            Plain English
+          </button>
+          <button onclick='openModal("Why this matters", getImpactHtml(${JSON.stringify(state.useCase)}))'
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-200 text-xs sm:text-sm font-medium hover:bg-teal-200 dark:hover:bg-teal-900 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 4 3 5-7"/></svg>
+            Why this matters
+          </button>
+        </div>
+      </header>
+
+      <!-- Workflow Simulation -->
+      <section class="bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-800 rounded-2xl p-5 sm:p-8 shadow-sm">
+        <div class="flex items-start justify-between gap-3 mb-4 sm:mb-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold mb-1">How it works — Step by step</h2>
+            <p class="text-sm text-ink-600 dark:text-ink-300">A simulation of the workflow from start to finish.</p>
+          </div>
+          <button onclick='openModal("About this workflow", "<p>This diagram shows the flow of work when AI handles this task. Each step is autonomous — meaning the AI does it without your input — except where you see a check mark, which means you review or approve.</p><p class=\\"mt-3\\">Real implementations may vary slightly based on the tool you pick, but the core sequence is the same.</p>")'
+            class="shrink-0 p-2 rounded-lg hover:bg-ink-100 dark:hover:bg-ink-800" aria-label="About this workflow">
+            <svg class="w-5 h-5 text-ink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4M12 16h.01"/></svg>
+          </button>
+        </div>
+
+        <!-- Desktop horizontal flow -->
+        <div class="hidden md:block overflow-x-auto pb-2">
+          ${renderWorkflowSvg(u.workflow)}
+        </div>
+        <!-- Mobile vertical flow -->
+        <div class="md:hidden">
+          ${renderWorkflowVertical(u.workflow)}
+        </div>
+      </section>
+
+      <!-- Two Paths -->
+      <section>
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Two ways to build this</h2>
+        <p class="text-ink-600 dark:text-ink-300 mb-5 text-sm sm:text-base">Pick the path that fits your budget and comfort with tech. Both work.</p>
+        <div class="grid lg:grid-cols-2 gap-5">
+          ${commercialPanel(u.commercial)}
+          ${customPanel(u.custom)}
+        </div>
+      </section>
+
+      <!-- References -->
+      ${u.refs && u.refs.length ? `
+        <section class="bg-ink-50 dark:bg-ink-900/50 border border-ink-200 dark:border-ink-800 rounded-xl p-5 sm:p-6">
+          <h3 class="font-bold mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+            Reference docs &amp; deeper reading
+          </h3>
+          <ul class="space-y-2">
+            ${u.refs.map(r => `
+              <li>
+                <a href="${r.url}" target="_blank" rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-brand-700 dark:text-brand-400 hover:underline text-sm">
+                  ${r.name}
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                </a>
+              </li>
+            `).join('')}
+          </ul>
+        </section>
+      ` : ''}
+
+      <!-- Bottom navigation -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-ink-200 dark:border-ink-800">
+        <button onclick="goCategory('${state.category}')"
+          class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-white dark:bg-ink-800 border border-ink-300 dark:border-ink-700 hover:border-brand-500 font-semibold transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+          Back to ${b ? b.name : 'category'}
+        </button>
+        <button onclick="goCategories()"
+          class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold transition-colors">
+          Try a different business type
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeJs(s) { return String(s).replace(/"/g, '\\"'); }
+
+function getPlainEnglishHtml(ucId) {
+  const u = USE_CASES[ucId];
+  return `
+    <div class="space-y-3">
+      <p>${u.plain}</p>
+      <div class="bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800 rounded-lg p-3">
+        <p class="text-sm"><strong>Think of it this way:</strong> imagine hiring a smart assistant who never sleeps, doesn't get bored, and only costs a few dollars a month. That's what's happening here.</p>
+      </div>
+    </div>
+  `;
+}
+function getImpactHtml(ucId) {
+  const u = USE_CASES[ucId];
+  return `
+    <div class="space-y-3">
+      <p class="font-medium">${u.helps}</p>
+      <p class="text-sm text-ink-600 dark:text-ink-300">Most small businesses see meaningful results within the first month — often just by setting it up and letting it run. The biggest wins come from sticking with it for 3–6 months while you tune it to your style.</p>
+    </div>
+  `;
+}
+
+/* ----- Commercial vs Custom panels ----- */
+function commercialPanel(items) {
+  return `
+    <div class="bg-white dark:bg-ink-900 border-2 border-brand-200 dark:border-brand-800 rounded-xl p-5 sm:p-6">
+      <div class="flex items-center gap-2 mb-1">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z"/></svg>
+        </div>
+        <h3 class="font-bold text-lg">Buy: Off-the-shelf tools</h3>
+      </div>
+      <p class="text-sm text-ink-600 dark:text-ink-300 mb-4">Sign up, click setup, done. Best if you want it working today and don't mind paying monthly.</p>
+      <ul class="space-y-3">
+        ${items.map(it => `
+          <li class="border border-ink-200 dark:border-ink-700 rounded-lg p-3 hover:border-brand-400 transition-colors">
+            <div class="flex items-start justify-between gap-2 mb-1">
+              <a href="${it.url}" target="_blank" rel="noopener noreferrer"
+                class="font-semibold text-brand-700 dark:text-brand-400 hover:underline inline-flex items-center gap-1.5">
+                ${it.name}
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+              </a>
+            </div>
+            <p class="text-sm text-ink-600 dark:text-ink-300">${it.desc}</p>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+function customPanel(items) {
+  return `
+    <div class="bg-white dark:bg-ink-900 border-2 border-accent-500 dark:border-accent-700 rounded-xl p-5 sm:p-6">
+      <div class="flex items-center gap-2 mb-1">
+        <div class="w-8 h-8 rounded-lg bg-accent-600 text-white flex items-center justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085"/></svg>
+        </div>
+        <h3 class="font-bold text-lg">Build: Custom with no-code tools</h3>
+      </div>
+      <p class="text-sm text-ink-600 dark:text-ink-300 mb-4">Combine cheap tools to create exactly what you want. More effort upfront, lower monthly cost. Some patience required.</p>
+      <ul class="space-y-3">
+        ${items.map(it => `
+          <li class="border border-ink-200 dark:border-ink-700 rounded-lg p-3 hover:border-accent-500 transition-colors">
+            <div class="font-semibold mb-1">${it.name}</div>
+            <p class="text-sm text-ink-600 dark:text-ink-300">${it.desc}</p>
+          </li>
+        `).join('')}
+      </ul>
+      <div class="mt-4 pt-4 border-t border-ink-200 dark:border-ink-700">
+        <p class="text-xs text-ink-500 dark:text-ink-400 font-semibold mb-2">Common building blocks:</p>
+        <div class="flex flex-wrap gap-1.5">
+          ${['Zapier','Make.com','n8n','ChatGPT','Claude','Gemini','Google Sheets','Airtable','Twilio'].map(t =>
+            `<button onclick='openModal("${t}", getToolExplainer("${t}"))' class="text-xs px-2 py-0.5 rounded-full bg-ink-100 dark:bg-ink-800 hover:bg-accent-100 dark:hover:bg-accent-900 transition-colors">${t}</button>`
+          ).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* Tool explainer popups */
+function getToolExplainer(name) {
+  const map = {
+    'Zapier': 'A "connector" service. You pick a trigger ("when a new email arrives") and an action ("add a row to my spreadsheet"). Zapier sits between apps and shuttles data. Free tier available; paid plans start around $20/mo.',
+    'Make.com': 'Like Zapier, but more visual and more powerful for the price. You build "scenarios" by dragging modules. Generally cheaper than Zapier at scale.',
+    'n8n': 'Open-source alternative to Zapier and Make. You can host it yourself for free, which means total control over your data. Steeper learning curve but unlimited.',
+    'ChatGPT': 'OpenAI\'s AI assistant. Best-known and very capable. ChatGPT Plus is $20/mo and gets you the smartest models, image generation, and Custom GPTs.',
+    'Claude': 'Anthropic\'s AI assistant (that\'s us, hi!). Strong at writing, reasoning, and following instructions carefully. Free tier available, Pro is $20/mo.',
+    'Gemini': 'Google\'s AI, deeply integrated with Gmail, Docs, Sheets, and Calendar. Great if your business already lives in Google Workspace.',
+    'Google Sheets': 'Free spreadsheet that doubles as a tiny database. Most no-code AI workflows start with a Sheet as the storage layer.',
+    'Airtable': 'A spreadsheet-database hybrid. Looks like Excel, behaves like a database. Great for tracking customers, jobs, inventory — and connects to AI tools cleanly.',
+    'Twilio': 'A service that lets your apps send/receive texts and phone calls. Pay per message (about a cent each). Power user pick for SMS automation.'
+  };
+  return `<p>${map[name] || 'A tool in the AI ecosystem.'}</p>`;
+}
+
+/* ============================================================
+   SVG WORKFLOW RENDERING
+   ============================================================ */
+function renderWorkflowSvg(steps) {
+  const stepWidth = 160;
+  const stepHeight = 100;
+  const gap = 50;
+  const padding = 20;
+  const totalWidth = steps.length * stepWidth + (steps.length - 1) * gap + padding * 2;
+  const totalHeight = stepHeight + padding * 2 + 70; // extra for label below
+
+  const stepNodes = steps.map((s, i) => {
+    const x = padding + i * (stepWidth + gap);
+    const y = padding;
+    return `
+      <g class="workflow-step">
+        <!-- Box -->
+        <rect x="${x}" y="${y}" width="${stepWidth}" height="${stepHeight}" rx="12"
+          fill="var(--step-bg)" stroke="var(--step-stroke)" stroke-width="2"/>
+        <!-- Icon circle -->
+        <circle cx="${x + 30}" cy="${y + 30}" r="18" fill="var(--icon-bg)"/>
+        <g transform="translate(${x + 30 - 12}, ${y + 30 - 12})" stroke="var(--icon-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          ${ICONS[s.icon] || ICONS.check}
+        </g>
+        <!-- Step number -->
+        <circle cx="${x + stepWidth - 18}" cy="${y + 18}" r="13" fill="var(--num-bg)"/>
+        <text x="${x + stepWidth - 18}" y="${y + 22}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--num-color)">${i+1}</text>
+        <!-- Label -->
+        <text x="${x + 12}" y="${y + 70}" font-size="13" font-weight="700" fill="var(--text-color)">${truncate(s.label, 20)}</text>
+        <text x="${x + 12}" y="${y + 88}" font-size="11" fill="var(--muted-color)">${truncate(s.detail, 24)}</text>
+      </g>
+    `;
+  }).join('');
+
+  const arrows = steps.slice(0, -1).map((_, i) => {
+    const x1 = padding + (i + 1) * stepWidth + i * gap;
+    const x2 = x1 + gap;
+    const y = padding + stepHeight / 2;
+    return `
+      <line x1="${x1 + 4}" y1="${y}" x2="${x2 - 8}" y2="${y}"
+        stroke="var(--arrow-color)" stroke-width="2.5" stroke-linecap="round"
+        class="flow-arrow" marker-end="url(#arrowhead)"/>
+    `;
+  }).join('');
+
+  return `
+    <style>
+      .workflow-step rect { transition: transform 0.2s; }
+      :root {
+        --step-bg: #ffffff; --step-stroke: #cbd5e1;
+        --icon-bg: #dbeafe; --icon-color: #1d4ed8;
+        --num-bg: #2563eb; --num-color: #ffffff;
+        --text-color: #0f172a; --muted-color: #475569;
+        --arrow-color: #64748b;
+      }
+      .dark {
+        --step-bg: #1e293b; --step-stroke: #334155;
+        --icon-bg: #1e3a8a; --icon-color: #93c5fd;
+        --num-bg: #3b82f6; --num-color: #ffffff;
+        --text-color: #f1f5f9; --muted-color: #94a3b8;
+        --arrow-color: #94a3b8;
+      }
+    </style>
+    <svg viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}" role="img" aria-label="Workflow diagram showing ${steps.length} steps">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+          <polygon points="0 0, 10 5, 0 10" fill="var(--arrow-color)"/>
+        </marker>
+      </defs>
+      ${arrows}
+      ${stepNodes}
+    </svg>
+  `;
+}
+
+function renderWorkflowVertical(steps) {
+  return `
+    <ol class="space-y-3">
+      ${steps.map((s, i) => `
+        <li class="flex gap-3">
+          <div class="shrink-0 flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold shadow-md">${i+1}</div>
+            ${i < steps.length - 1 ? '<div class="w-0.5 flex-1 bg-brand-300 dark:bg-brand-700 mt-1 min-h-[20px]"></div>' : ''}
+          </div>
+          <div class="flex-1 pb-3">
+            <div class="bg-ink-50 dark:bg-ink-800/60 border border-ink-200 dark:border-ink-700 rounded-lg p-3">
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-7 h-7 rounded-lg bg-brand-100 dark:bg-brand-950 flex items-center justify-center text-brand-700 dark:text-brand-300">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    ${ICONS[s.icon] || ICONS.check}
+                  </svg>
+                </div>
+                <h4 class="font-semibold">${s.label}</h4>
+              </div>
+              <p class="text-sm text-ink-600 dark:text-ink-300">${s.detail}</p>
+            </div>
+          </div>
+        </li>
+      `).join('')}
+    </ol>
+  `;
+}
+
+function truncate(s, n) {
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+render();
+</script>
+</body>
+</html>
